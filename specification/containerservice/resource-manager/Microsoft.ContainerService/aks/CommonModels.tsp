@@ -2016,6 +2016,13 @@ model ManagedClusterProperties {
   healthMonitorProfile?: ManagedClusterHealthMonitorProfile;
 
   /**
+   * A deterministic identifier that encodes platform component versions. Use this field to create clusters with identical versions to an existing cluster.
+   */
+  @added(Versions.v2026_01_02_preview)
+  @pattern("^pcv[0-9]{8}-[A-Za-z0-9_-]+$")
+  platformComponentVersion?: string;
+
+  /**
    * Contains read-only information about the Managed Cluster.
    */
   status?: ManagedClusterStatus;
@@ -4172,15 +4179,15 @@ model OperationListResult {
 }
 
 /**
-* Health monitor profile for the managed cluster.
-*/
+ * Health monitor profile for the managed cluster.
+ */
 @added(Versions.v2026_01_02_preview)
 model ManagedClusterHealthMonitorProfile {
   /**
    * Whether to enable continuous control plane and addon monitor.
    */
   enableContinuousControlPlaneAndAddonMonitor?: boolean;
- 
+
   /**
    * Whether to enable on-demand monitor.
    */

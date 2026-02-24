@@ -1,0 +1,39 @@
+{
+  "operationId": "PlatformComponentVersionsOperationGroup_ListPlatformComponentVersions",
+  "title": "List platform component versions",
+  "parameters": {
+    "api-version": "2026-01-02-preview",
+    "subscriptionId": "00000000-0000-0000-0000-000000000000",
+    "location": "eastus",
+    "component": "core-addon-release-manager"
+  },
+  "responses": {
+    "200": {
+      "body": {
+        "value": [
+          {
+            "component": "core-addon-release-manager",
+            "versions": [
+              {
+                "version": "v20251220.1",
+                "majorVersion": "v20251220",
+                "releasedAt": "2025-12-20T10:00:00Z",
+                "expiresAt": null,
+                "isLatest": true,
+                "available": true
+              },
+              {
+                "version": "v20251215.0",
+                "majorVersion": "v20251215",
+                "releasedAt": "2025-12-15T08:00:00Z",
+                "expiresAt": "2026-01-19T10:00:00Z",
+                "isLatest": false,
+                "available": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

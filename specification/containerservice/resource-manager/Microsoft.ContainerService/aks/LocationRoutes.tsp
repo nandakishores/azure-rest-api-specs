@@ -93,3 +93,93 @@ interface VmSkusOperationGroup {
     }
   >;
 }
+
+/**
+ * The list of platform component versions.
+ */
+@added(Versions.v2026_01_02_preview)
+model PlatformComponentVersionsList {
+  /**
+   * The list of component versions.
+   */
+  @identifiers(#[])
+  value?: ComponentVersions[];
+}
+
+/**
+ * Versions available for a specific platform component.
+ */
+@added(Versions.v2026_01_02_preview)
+model ComponentVersions {
+  /**
+   * Component name (e.g., 'core-addon-release-manager').
+   */
+  component?: string;
+
+  /**
+   * The list of version information for this component.
+   */
+  @identifiers(#[])
+  versions?: VersionInfo[];
+}
+
+/**
+ * Detailed information about a specific version of a platform component.
+ */
+@added(Versions.v2026_01_02_preview)
+model VersionInfo {
+  /**
+   * Full version string (e.g., 'v20251220.1').
+   */
+  version?: string;
+
+  /**
+   * Major version for goalVersion (e.g., 'v20251220').
+   */
+  majorVersion?: string;
+
+  /**
+   * The date and time when this version was released.
+   */
+  releasedAt?: utcDateTime;
+
+  /**
+   * The date and time when this version expires. Null for the latest version (never expires); 30 days after superseded for others.
+   */
+  expiresAt?: utcDateTime;
+
+  /**
+   * Whether this is the latest version for the component.
+   */
+  isLatest?: boolean;
+
+  /**
+   * Whether the version is available for use (false if expired or reverted).
+   */
+  available?: boolean;
+}
+
+#suppress "@azure-tools/typespec-azure-resource-manager/arm-resource-interface-requires-decorator" "Adding @armResourceOperations would inject an undesired resource-derived tag on these location-scoped operations."
+@added(Versions.v2026_01_02_preview)
+interface PlatformComponentVersionsOperationGroup {
+  /**
+   * Gets the list of available platform component versions for the specified location.
+   */
+  @summary("List available platform component versions.")
+  @tag("ManagedClusters")
+  @autoRoute
+  @action("listPlatformComponentVersions")
+  listPlatformComponentVersions is ArmProviderActionSync<
+    Response = PlatformComponentVersionsList,
+    Scope = SubscriptionActionScope,
+    Parameters = {
+      ...LocationResourceParameter;
+
+      /**
+       * Filter by component name (e.g., 'core-addon-release-manager').
+       */
+      @query
+      component?: string;
+    }
+  >;
+}

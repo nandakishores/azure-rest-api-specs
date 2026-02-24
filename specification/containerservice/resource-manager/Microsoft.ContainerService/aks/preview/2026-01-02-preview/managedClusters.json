@@ -263,6 +263,53 @@
         }
       }
     },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/locations/{location}/listPlatformComponentVersions": {
+      "post": {
+        "operationId": "PlatformComponentVersionsOperationGroup_ListPlatformComponentVersions",
+        "tags": [
+          "ManagedClusters"
+        ],
+        "summary": "List available platform component versions.",
+        "description": "Gets the list of available platform component versions for the specified location.",
+        "parameters": [
+          {
+            "$ref": "../../../../../../common-types/resource-management/v6/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../../common-types/resource-management/v6/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../../common-types/resource-management/v6/types.json#/parameters/LocationParameter"
+          },
+          {
+            "name": "component",
+            "in": "query",
+            "description": "Filter by component name (e.g., 'core-addon-release-manager').",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "schema": {
+              "$ref": "#/definitions/PlatformComponentVersionsList"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "../../../../../../common-types/resource-management/v6/types.json#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "List platform component versions": {
+            "$ref": "./examples/ListPlatformComponentVersions.json"
+          }
+        }
+      }
+    },
     "/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/locations/{location}/meshRevisionProfiles": {
       "get": {
         "operationId": "ManagedClusters_ListMeshRevisionProfiles",
@@ -7297,6 +7344,24 @@
         }
       }
     },
+    "ComponentVersions": {
+      "type": "object",
+      "description": "Versions available for a specific platform component.",
+      "properties": {
+        "component": {
+          "type": "string",
+          "description": "Component name (e.g., 'core-addon-release-manager')."
+        },
+        "versions": {
+          "type": "array",
+          "description": "The list of version information for this component.",
+          "items": {
+            "$ref": "#/definitions/VersionInfo"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
     "ComponentsByRelease": {
       "type": "object",
       "description": "components of given Kubernetes version.",
@@ -11665,6 +11730,11 @@
           "$ref": "#/definitions/ManagedClusterHealthMonitorProfile",
           "description": "Health monitor profile for the managed cluster."
         },
+        "platformComponentVersion": {
+          "type": "string",
+          "description": "A deterministic identifier that encodes platform component versions. Use this field to create clusters with identical versions to an existing cluster.",
+          "pattern": "^pcv[0-9]{8}-[A-Za-z0-9_-]+$"
+        },
         "status": {
           "$ref": "#/definitions/ManagedClusterStatus",
           "description": "Contains read-only information about the Managed Cluster."
@@ -13598,6 +13668,20 @@
         "value"
       ]
     },
+    "PlatformComponentVersionsList": {
+      "type": "object",
+      "description": "The list of platform component versions.",
+      "properties": {
+        "value": {
+          "type": "array",
+          "description": "The list of component versions.",
+          "items": {
+            "$ref": "#/definitions/ComponentVersions"
+          },
+          "x-ms-identifiers": []
+        }
+      }
+    },
     "PodIPAllocationMode": {
       "type": "string",
       "description": "Pod IP Allocation Mode. The IP allocation mode for pods in the agent pool. Must be used with podSubnetId. The default is 'DynamicIndividual'.",
@@ -15442,6 +15526,38 @@
         "objectId": {
           "type": "string",
           "description": "The object ID of the user assigned identity."
+        }
+      }
+    },
+    "VersionInfo": {
+      "type": "object",
+      "description": "Detailed information about a specific version of a platform component.",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Full version string (e.g., 'v20251220.1')."
+        },
+        "majorVersion": {
+          "type": "string",
+          "description": "Major version for goalVersion (e.g., 'v20251220')."
+        },
+        "releasedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time when this version was released."
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time when this version expires. Null for the latest version (never expires); 30 days after superseded for others."
+        },
+        "isLatest": {
+          "type": "boolean",
+          "description": "Whether this is the latest version for the component."
+        },
+        "available": {
+          "type": "boolean",
+          "description": "Whether the version is available for use (false if expired or reverted)."
         }
       }
     },
